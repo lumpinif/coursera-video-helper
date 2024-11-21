@@ -12,20 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: markdownlint-cli2-action
-        uses: DavidAnson/markdownlint-cli2-action@v13
-        id: markdownlint
-        with:
-          globs: "**/*.md"
-          fix: true
-      - name: Commit fixes
-        if: steps.markdownlint.outputs.fixed > 0
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git commit -a -m 'Automated markdown fixes'
-          git push
-          
-  test:
+        uses: DavidAnson/markdownlint-cli2-action@v18.0.0
+
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
