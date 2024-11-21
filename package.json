@@ -4,11 +4,11 @@
   "description": "Chrome extension to enhance Coursera learning experience",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --watch --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
-    "test": "jest",
-    "lint": "eslint 'src/**/*.{js,ts,tsx}' --fix",
-    "format": "prettier --write 'src/**/*.{js,ts,tsx,json,css,scss,md}'"
+    "dev": "bun run webpack --watch --config webpack.dev.js",
+    "build": "bun run webpack --config webpack.prod.js",
+    "test": "bun test",
+    "lint": "bun run eslint 'src/**/*.{js,ts,tsx}' --fix",
+    "format": "bun run prettier --write 'src/**/*.{js,ts,tsx,json,css,scss,md}'"
   },
   "keywords": [
     "chrome-extension",
