@@ -1,6 +1,6 @@
-<img width="461" alt="image" src="https://github.com/user-attachments/assets/8fea1d83-b701-4660-b170-4e4ea9508f7c">
-
 # A Coursera transcript copy button extension
+
+![image](https://github.com/user-attachments/assets/8fea1d83-b701-4660-b170-4e4ea9508f7c)
 
 ## Coursera Copilot Chrome Extension
 
@@ -22,20 +22,22 @@ A Chrome extension that enhances the Coursera learning experience by providing a
 
 ```tree
 coursera-extension/
+├── .github/                # GitHub configuration
 ├── src/
-│   ├── content/              # Content scripts
-│   │   ├── components/       # UI components
-│   │   └── utils/           # Utility functions
-│   ├── background/          # Background scripts
-│   └── manifest.json        # Extension manifest
-├── public/                  # Static assets
-├── dist/                    # Built files
-├── webpack.common.js        # Common webpack configuration
-├── webpack.dev.js          # Development webpack configuration
-├── webpack.prod.js         # Production webpack configuration
-├── tailwind.config.js      # Tailwind CSS configuration
-├── postcss.config.js       # PostCSS configuration
-└── package.json            # Project dependencies
+│   ├── content/           # Content scripts
+│   ├── types/            # TypeScript type definitions
+│   └── manifest.json     # Extension manifest
+├── public/               # Static assets
+├── dist/                 # Built files
+├── .eslintrc.cjs        # ESLint configuration
+├── .prettierrc          # Prettier configuration
+├── tsconfig.json        # TypeScript configuration
+├── webpack.common.js    # Common webpack configuration
+├── webpack.dev.js       # Development webpack configuration
+├── webpack.prod.js      # Production webpack configuration
+├── tailwind.config.js   # Tailwind CSS configuration
+├── postcss.config.cjs   # PostCSS configuration
+└── package.json         # Project dependencies
 ```
 
 ## Technical Stack
@@ -50,15 +52,33 @@ coursera-extension/
 
 ## Getting Started
 
-1. Clone the repository
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [Git](https://git-scm.com/)
+- [Bun](https://bun.sh/) (for faster package management)
+- Google Chrome browser
+
+### Installation Steps
+
+1. Open your terminal and clone the repository:
+
+   ```bash
+   git clone https://github.com/lumpinif/coursera-extension.git
+   cd coursera-extension
+   ```
 
 2. Install Bun (if not already installed):
 
    ```bash
+   # For macOS and Linux:
    curl -fsSL https://bun.sh/install | bash
+   
+   # For Windows (using PowerShell):
+   powershell -c "irm bun.sh/install.ps1|iex"
    ```
 
-3. Install dependencies:
+3. Install project dependencies:
 
    ```bash
    bun install
@@ -70,12 +90,30 @@ coursera-extension/
    bun run build
    ```
 
-5. Load the extension in Chrome:
-   - Open Chrome
-   - Go to chrome://extensions/
-   - Enable Developer mode
-   - Click "Load unpacked"
-   - Select the `dist` folder
+### Loading the Extension in Chrome
+
+1. Open Google Chrome
+2. Type `chrome://extensions/` in the address bar and press Enter
+3. Enable "Developer mode" by toggling the switch in the top-right corner
+4. Click "Load unpacked" button in the top-left corner
+5. Navigate to your project's directory and select the `dist` folder
+6. The extension should now appear in your extensions list
+7. Pin the extension by clicking the puzzle piece icon in Chrome's toolbar and clicking the pin icon
+
+### Testing the Extension
+
+1. Go to any Coursera lecture page
+2. You should see a new "Copy" button next to the "Discuss" tab
+3. Click the button to copy the lecture transcript
+
+### Troubleshooting
+
+If the extension doesn't appear:
+
+- Make sure you've built the project (`bun run build`)
+- Check if Developer mode is enabled
+- Try reloading the extension
+- Clear Chrome's cache and restart the browser
 
 ## Development
 
