@@ -1,7 +1,11 @@
-const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import CopyPlugin from 'copy-webpack-plugin';
 
-module.exports = {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
   entry: {
     content: './src/content/index.tsx',
   },

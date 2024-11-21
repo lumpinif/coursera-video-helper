@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "description": "Chrome extension to enhance Coursera learning experience",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "bun run webpack --watch --config webpack.dev.js",
-    "build": "bun run webpack --config webpack.prod.js",
+    "dev": "NODE_ENV=development bun run webpack --watch --config webpack.dev.js",
+    "build": "NODE_ENV=production bun run webpack --config webpack.prod.js",
     "test": "bun test",
     "lint": "bun run eslint 'src/**/*.{js,ts,tsx}' --fix",
     "format": "bun run prettier --write 'src/**/*.{js,ts,tsx,json,css,scss,md}'"
