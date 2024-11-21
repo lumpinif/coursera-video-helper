@@ -11,7 +11,7 @@
     "lint": "bun run eslint 'src/**/*.{js,ts,tsx}' --fix",
     "format": "bun run prettier --write 'src/**/*.{js,ts,tsx,json,css,scss,md}'",
     "prepare": "husky && husky install",
-    "lint-staged": "lint-staged",
+    "lint-staged": "lint-staged --allow-empty",
     "lint:md": "bunx --bun markdownlint-cli2 --config .markdownlint-cli2.jsonc --fix"
   },
   "lint-staged": {
