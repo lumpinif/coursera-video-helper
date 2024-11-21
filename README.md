@@ -37,6 +37,7 @@ coursera-extension/
 ├── webpack.prod.js      # Production webpack configuration
 ├── tailwind.config.js   # Tailwind CSS configuration
 ├── postcss.config.cjs   # PostCSS configuration
+├── .markdownlint.json   # Markdownlint configuration
 └── package.json         # Project dependencies
 ```
 
@@ -49,6 +50,7 @@ coursera-extension/
 - ESLint + Prettier for code formatting
 - Jest for testing
 - PostCSS for CSS processing
+- Markdownlint for markdown linting
 
 ## Getting Started
 
@@ -58,6 +60,26 @@ coursera-extension/
 - [Git](https://git-scm.com/)
 - [Bun](https://bun.sh/) (for faster package management)
 - Google Chrome browser
+
+ 
+
+### Development Tools
+
+ 
+
+#### Markdown Linting
+
+The project uses markdownlint for consistent markdown formatting. The rules are configured in `.markdownlint.json`. To check markdown files locally:
+
+```bash
+bun markdownlint-cli2 "**/*.md"
+```
+
+To automatically fix markdown issues:
+
+```bash
+bun markdownlint-cli2-fix "**/*.md"
+```
 
 ### Installation Steps
 
