@@ -19,11 +19,11 @@ jobs:
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
-      - name: markdownlint-cli2-action
+      - name: Install and run markdownlint
         id: markdownlint
         run: |
-          bun add -g markdownlint-cli2
-          bun markdownlint-cli2-fix "**/*.md"
+          bun install markdownlint-cli2
+          bunx markdownlint-cli2-fix "**/*.md"
       - name: Commit fixes
         run: |
           if [[ -n $(git status --porcelain) ]]; then
