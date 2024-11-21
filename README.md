@@ -55,17 +55,14 @@ coursera-extension/
 ## Getting Started
 
 ### Prerequisites
+
 - Leave a 🌟 for this repo
 - [Node.js](https://nodejs.org/) (v18 or higher)
 - [Git](https://git-scm.com/)
 - [Bun](https://bun.sh/) (for faster package management)
 - Google Chrome browser
 
- 
-
 ### Development Tools
-
- 
 
 #### Markdown Linting
 
