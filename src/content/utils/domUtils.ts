@@ -34,7 +34,7 @@ export const findElement = async (
     const element = await waitForElement(selector);
     if (element) {
       console.log(
-        `[Coursera Copilot] Found element using selector: ${selector}`
+        "[Coursera Copilot] Found element using the selector"
       );
       return element;
     }
