@@ -7,9 +7,25 @@ on:
     branches: [ main ]
 
 jobs:
+  markdown-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: markdownlint-cli2-action
+        uses: DavidAnson/markdownlint-cli2-action@v13
+        with:
+          globs: "**/*.md"
+          fix: true
+      - name: Commit fixes
+        if: steps.markdownlint.outputs.fixed > 0
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git commit -a -m 'Automated markdown fixes'
+          git push
+          
   test:
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v4
     
