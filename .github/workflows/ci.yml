@@ -22,8 +22,8 @@ jobs:
       - name: Install and run markdownlint
         id: markdownlint
         run: |
-          bun install markdownlint-cli2
-          bunx markdownlint-cli2-fix "**/*.md"
+          bun install markdownlint-cli2 --global
+          bun markdownlint-cli2 --fix "**/*.md"
       - name: Commit fixes
         run: |
           if [[ -n $(git status --porcelain) ]]; then
