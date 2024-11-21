@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Coursera Copilot",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Enhance your Coursera learning experience with useful tools",
   "permissions": ["clipboardWrite", "activeTab"],
   "host_permissions": ["https://*.coursera.org/*"],

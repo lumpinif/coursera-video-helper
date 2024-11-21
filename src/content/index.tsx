@@ -41,6 +41,13 @@ const App = () => {
 const init = async () => {
   console.log('[Coursera Copilot] Initializing extension...');
 
+  // Check if button already exists
+  const existingContainer = document.getElementById('coursera-copilot-container');
+  if (existingContainer) {
+    console.log('[Coursera Copilot] Button already exists, skipping initialization');
+    return;
+  }
+
   const tablist = await findElement(TABLIST_SELECTORS);
 
   if (tablist) {
