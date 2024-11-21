@@ -48,7 +48,7 @@ export const CopyTranscriptButton: React.FC = () => {
 
   return (
     <button
-    className={`inline-flex items-center justify-center min-h-[48px] min-w-[44px] w-[140px] font-[var(--cds-font-weight-600)] text-sm px-3 py-3 mb-1 mr-6 transition-colors duration-200 ease-in-out outline-none focus:outline-none
+      className={`inline-flex items-center justify-center min-h-[48px] min-w-[44px] w-[140px] font-[var(--cds-font-weight-600)] text-sm px-3 py-3 mb-1 mr-6 transition-colors duration-200 ease-in-out outline-none focus:outline-none
       ${status === 'idle' ? 'bg-transparent text-[var(--cds-color-neutral-primary)] hover:text-[var(--cds-color-interactive-primary-hover)] hover:bg-[var(--cds-color-interactive-background-primary-hover-weak)]' : ''}
       ${status === 'copying' ? 'bg-transparent text-[var(--cds-color-neutral-disabled)] cursor-not-allowed' : ''}
       ${status === 'success' ? 'bg-transparent text-[var(--cds-color-feedback-success)]' : ''}

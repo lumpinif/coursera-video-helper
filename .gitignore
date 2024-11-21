@@ -5,8 +5,8 @@ node_modules/
 bun.lockb
 
 # Build output
-# dist/
-# build/
+dist/
+build/
 
 # IDE and editor files
 .idea/
