@@ -64,8 +64,8 @@ coursera-extension/
 1. Open your terminal and clone the repository:
 
    ```bash
-   git clone https://github.com/lumpinif/coursera-extension.git
-   cd coursera-extension
+   git clone https://github.com/lumpinif/coursera-transcript-copy-button.git
+   cd coursera-transcript-copy-button
    ```
 
 2. Install Bun (if not already installed):
