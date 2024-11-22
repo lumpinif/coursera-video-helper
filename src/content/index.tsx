@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { CopyTranscriptButton } from './components/CopyTranscriptButton';
+import { AutoSeekToTranscript } from './components/AutoSeekToTranscript';
 import { findElement } from './utils/domUtils';
 import { shouldInitialize } from './utils/urlUtils';
 import './styles.css';
@@ -11,7 +12,7 @@ const TABLIST_SELECTORS = [
   '[aria-label="Related lecture content tabs"][role="tablist"]',
 ];
 
-const App = () => {
+const App: React.FC = () => {
   const [isTranscriptSelected, setIsTranscriptSelected] = useState(false);
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const init = async () => {
     return;
   }
 
-  // Check if button already exists
+  // Initialize copy transcript button
   const existingButton = document.getElementById('coursera-copilot-button');
   if (existingButton) {
     console.log(
@@ -77,6 +78,57 @@ const init = async () => {
   } else {
     console.warn('[Coursera Copilot] Could not find tablist');
   }
+
+  // Initialize auto seek button
+  const existingSeekButton = document.getElementById(
+    'auto-seek-button-container'
+  );
+  if (existingSeekButton) return;
+
+  const titleContainer = await findElement(['#video-item-title-and-save-note']);
+  if (titleContainer) {
+    // Create a new grid item container for our button
+    const seekGridItem = document.createElement('div');
+    seekGridItem.style.display = 'flex';
+    seekGridItem.style.alignItems = 'center';
+    seekGridItem.style.justifyContent = 'flex-end';
+    seekGridItem.style.minWidth = '0';
+
+    // Create our button container
+    const seekButtonContainer = document.createElement('div');
+    seekButtonContainer.id = 'auto-seek-button-container';
+    seekButtonContainer.className = 'rc-CaptureHighlightButton';
+
+    // Add button container to grid item
+    seekGridItem.appendChild(seekButtonContainer);
+
+    // Find title and save note containers
+    const titleAndAttribution = titleContainer.querySelector(
+      'div[data-testid="video-item-title-and-attribution"]'
+    );
+    const saveNoteGridItem = titleAndAttribution?.nextElementSibling;
+
+    if (titleAndAttribution && saveNoteGridItem) {
+      // Create wrapper for buttons
+      const buttonWrapper = document.createElement('div');
+      buttonWrapper.style.display = 'flex';
+      buttonWrapper.style.gap = '8px';
+      buttonWrapper.style.alignItems = 'center';
+      buttonWrapper.style.justifyContent = 'flex-end';
+      buttonWrapper.style.minWidth = '0';
+
+      // Insert our grid item and wrap it with save note button
+      saveNoteGridItem.insertAdjacentElement('beforebegin', seekGridItem);
+      seekGridItem.parentNode?.insertBefore(buttonWrapper, seekGridItem);
+      buttonWrapper.appendChild(seekGridItem);
+      buttonWrapper.appendChild(saveNoteGridItem);
+
+      // Render our button
+      const seekRoot = createRoot(seekButtonContainer);
+      seekRoot.render(<AutoSeekToTranscript />);
+      console.log('[Coursera Copilot] Auto seek button injected successfully');
+    }
+  }
 };
 
 // Initialize when DOM is ready
@@ -84,18 +136,16 @@ if (document.readyState === 'loading') {
   console.log(
     '[Coursera Copilot] Document loading, waiting for DOMContentLoaded...'
   );
-  document.addEventListener('DOMContentLoaded', () => init());
+  document.addEventListener('DOMContentLoaded', init);
 } else {
-  console.log('[Coursera Copilot] Document already loaded, initializing...');
   init();
 }
 
-// Re-initialize on URL changes (for SPA navigation)
-let lastUrl = location.href;
+// Re-initialize on URL changes
+let lastUrl = window.location.href;
 new MutationObserver(() => {
-  const url = location.href;
+  const url = window.location.href;
   if (url !== lastUrl) {
-    console.log('[Coursera Copilot] URL changed, reinitializing...');
     lastUrl = url;
     init();
   }
