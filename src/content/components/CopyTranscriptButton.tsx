@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getTranscript } from '../utils/transcript';
+import { getTranscriptWithTimestamps } from '../utils/transcript';
 
 export const CopyTranscriptButton: React.FC = () => {
   const [status, setStatus] = useState<
@@ -9,7 +9,7 @@ export const CopyTranscriptButton: React.FC = () => {
   const handleCopy = async () => {
     try {
       setStatus('copying');
-      const transcript = await getTranscript();
+      const transcript = await getTranscriptWithTimestamps();
 
       if (!transcript) {
         throw new Error('No transcript found');
