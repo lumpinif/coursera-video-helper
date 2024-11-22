@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { CopyTranscriptButton } from './components/CopyTranscriptButton';
 import { findElement } from './utils/domUtils';
+import { shouldInitialize } from './utils/urlUtils';
 import './styles.css';
 
 const TABLIST_SELECTORS = [
@@ -41,6 +42,14 @@ const App = () => {
 const init = async () => {
   console.log('[Coursera Copilot] Initializing extension...');
 
+  // Skip initialization for unsupported pages
+  if (!shouldInitialize(window.location.href)) {
+    console.log(
+      '[Coursera Copilot] Skipping initialization for unsupported page'
+    );
+    return;
+  }
+
   // Check if button already exists
   const existingButton = document.getElementById('coursera-copilot-button');
   if (existingButton) {
@@ -55,9 +64,11 @@ const init = async () => {
   if (tablist) {
     console.log('[Coursera Copilot] Found tablist, injecting button...');
 
-    // Create a container but keep it minimal
     const container = document.createElement('div');
-    container.className = 'inline-block'; // Keep it inline with other elements
+    // Add Coursera's classes and make it behave like their tab items
+    container.className = 'contents cds-button-container css-zgpty rounded-md';
+    container.setAttribute('role', 'tab');
+    container.setAttribute('id', 'transcript-copy-button-container');
     tablist.appendChild(container);
 
     const root = createRoot(container);
