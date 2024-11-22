@@ -1,10 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getTranscript } from '../utils/transcript';
 
 export const CopyTranscriptButton: React.FC = () => {
   const [status, setStatus] = useState<
     'idle' | 'copying' | 'success' | 'error'
   >('idle');
+  const [isLecturePage, setIsLecturePage] = useState(false);
+
+  useEffect(() => {
+    const checkIfLecturePage = () => {
+      const url = window.location.href;
+      const learnMatch = url.match(/\/learn\/.*?\/lecture\//);
+      setIsLecturePage(!!learnMatch);
+    };
+
+    checkIfLecturePage();
+  }, []);
+
+  // Don't render the button if we're not on a lecture page
+  if (!isLecturePage) {
+    return null;
+  }
 
   const handleCopy = async () => {
     try {
@@ -48,7 +64,8 @@ export const CopyTranscriptButton: React.FC = () => {
 
   return (
     <button
-      className={`inline-flex items-center justify-center min-h-[48px] min-w-[44px] w-[140px] font-[var(--cds-font-weight-600)] text-sm px-3 py-3 mb-1 mr-6 transition-colors duration-200 ease-in-out outline-none focus:outline-none
+      id="coursera-copilot-button"
+      className={`rounded-md inline-flex items-center justify-center min-h-[48px] min-w-[44px] w-fit font-[var(--cds-font-weight-600)] text-sm px-2 py-3 mb-1 mr-6 transition-colors duration-200 ease-in-out outline-none focus:outline-none
       ${status === 'idle' ? 'bg-transparent text-[var(--cds-color-neutral-primary)] hover:text-[var(--cds-color-interactive-primary-hover)] hover:bg-[var(--cds-color-interactive-background-primary-hover-weak)]' : ''}
       ${status === 'copying' ? 'bg-transparent text-[var(--cds-color-neutral-disabled)] cursor-not-allowed' : ''}
       ${status === 'success' ? 'bg-transparent text-[var(--cds-color-feedback-success)]' : ''}

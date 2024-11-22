@@ -42,9 +42,11 @@ const init = async () => {
   console.log('[Coursera Copilot] Initializing extension...');
 
   // Check if button already exists
-  const existingContainer = document.getElementById('coursera-copilot-container');
-  if (existingContainer) {
-    console.log('[Coursera Copilot] Button already exists, skipping initialization');
+  const existingButton = document.getElementById('coursera-copilot-button');
+  if (existingButton) {
+    console.log(
+      '[Coursera Copilot] Button already exists, skipping initialization'
+    );
     return;
   }
 
@@ -52,9 +54,10 @@ const init = async () => {
 
   if (tablist) {
     console.log('[Coursera Copilot] Found tablist, injecting button...');
+
+    // Create a container but keep it minimal
     const container = document.createElement('div');
-    container.id = 'coursera-copilot-container';
-    // Insert at the beginning of the tablist
+    container.className = 'inline-block'; // Keep it inline with other elements
     tablist.appendChild(container);
 
     const root = createRoot(container);
