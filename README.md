@@ -13,31 +13,40 @@ A Chrome extension that enhances the Coursera learning experience by providing a
 - Copy Lecture Transcript: Adds a "Copy" button next to the "Discuss" tab in course lectures to easily copy the entire transcript to clipboard
 - Modern UI with Tailwind CSS styling
 - Responsive design that matches Coursera's interface
+- TypeScript for enhanced type safety and developer experience
+- React components for modular UI development
+- Webpack configuration for development and production builds
 
-### Planned
+## Development Features
 
--
+- Husky for Git hooks management
+- ESLint + Prettier for code formatting
+- Markdownlint for markdown file consistency
+- Lint-staged for pre-commit code quality checks
+- Bun as the JavaScript runtime and package manager
+- Jest for testing framework
 
 ## Project Structure
 
 ```tree
 coursera-extension/
 ├── .github/                # GitHub configuration
+├── .husky/                # Git hooks configuration
 ├── src/
 │   ├── content/           # Content scripts
-│   ├── types/            # TypeScript type definitions
-│   └── manifest.json     # Extension manifest
-├── public/               # Static assets
-├── dist/                 # Built files
-├── .eslintrc.cjs        # ESLint configuration
-├── .prettierrc          # Prettier configuration
-├── tsconfig.json        # TypeScript configuration
-├── webpack.common.js    # Common webpack configuration
+│   ├── types/             # TypeScript type definitions
+│   └── manifest.json      # Extension manifest
+├── public/                # Static assets
+├── dist/                  # Built files
+├── .eslintrc.cjs         # ESLint configuration
+├── .prettierrc           # Prettier configuration
+├── .markdownlint-cli2.jsonc # Markdownlint configuration
+├── tsconfig.json         # TypeScript configuration
+├── webpack.common.js     # Common webpack configuration
 ├── webpack.dev.js       # Development webpack configuration
 ├── webpack.prod.js      # Production webpack configuration
 ├── tailwind.config.js   # Tailwind CSS configuration
 ├── postcss.config.cjs   # PostCSS configuration
-├── .markdownlint.json   # Markdownlint configuration
 └── package.json         # Project dependencies
 ```
 
@@ -47,8 +56,10 @@ coursera-extension/
 - React for UI components
 - Tailwind CSS for styling
 - Webpack for bundling
+- Bun for package management and running scripts
 - ESLint + Prettier for code formatting
 - Jest for testing
+- Husky + lint-staged for Git hooks
 - PostCSS for CSS processing
 - Markdownlint for markdown linting
 
@@ -56,7 +67,7 @@ coursera-extension/
 
 ### Prerequisites
 
-- Leave a 🌟 for this repo
+- Leave a for this repo
 - [Node.js](https://nodejs.org/) (v18 or higher)
 - [Git](https://git-scm.com/)
 - [Bun](https://bun.sh/) (for faster package management)
@@ -66,7 +77,7 @@ coursera-extension/
 
 #### Markdown Linting
 
-The project uses markdownlint for consistent markdown formatting. The rules are configured in `.markdownlint.json`. To check markdown files locally:
+The project uses markdownlint for consistent markdown formatting. The rules are configured in `.markdownlint-cli2.jsonc`. To check markdown files locally:
 
 ```bash
 bun markdownlint-cli2 "**/*.md"
@@ -92,7 +103,7 @@ bun markdownlint-cli2-fix "**/*.md"
    ```bash
    # For macOS and Linux:
    curl -fsSL https://bun.sh/install | bash
-   
+
    # For Windows (using PowerShell):
    powershell -c "irm bun.sh/install.ps1|iex"
    ```

@@ -42,7 +42,7 @@ export default {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: 'src/manifest.json', to: 'manifest.json' },
+        { from: 'public/manifest.json', to: 'manifest.json' },
         { from: 'public', to: '.' },
       ],
     }),
