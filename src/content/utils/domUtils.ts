@@ -33,9 +33,7 @@ export const findElement = async (
   for (const selector of selectors) {
     const element = await waitForElement(selector);
     if (element) {
-      console.log(
-        "[Coursera Copilot] Found element using the selector"
-      );
+      console.log('[Coursera Copilot] Found element using the selector');
       return element;
     }
   }
