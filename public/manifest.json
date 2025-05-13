@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Coursera Copilot",
-  "version": "0.2.0",
+  "name": "Coursera Video Helper",
+  "version": "0.2.1",
   "description": "Enhance your Coursera learning experience with useful tools",
   "permissions": ["clipboardWrite", "activeTab"],
   "host_permissions": ["https://*.coursera.org/*"],
@@ -13,14 +13,14 @@
   ],
   "action": {
     "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
+      "16": "icons/extension_icon@16px.png",
+      "48": "icons/extension_icon@48px.png",
+      "128": "icons/extension_icon@128px.png"
     }
   },
   "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
+    "16": "icons/extension_icon@16px.png",
+    "48": "icons/extension_icon@48px.png",
+    "128": "icons/extension_icon@128px.png"
   }
 }
