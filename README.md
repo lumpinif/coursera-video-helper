@@ -2,6 +2,9 @@
 
 ![image](https://github.com/user-attachments/assets/8fea1d83-b701-4660-b170-4e4ea9508f7c)
 
+<img width="491" alt="image" src="https://github.com/user-attachments/assets/628a344e-495b-4a2f-a4e1-e16ab673cef4" />
+
+
 ## Coursera Copilot Chrome Extension
 
 A Chrome extension that enhances the Coursera learning experience by providing additional functionality, starting with a transcript copy feature.
