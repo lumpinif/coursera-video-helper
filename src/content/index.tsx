@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { AutoSeekToTranscript } from './components/AutoSeekToTranscript';
 import { CopyTranscriptButton } from './components/CopyTranscriptButton';
-import { findElement } from './utils/domUtils';
+import { findElement, startZenModeCleanup } from './utils/domUtils';
 import { shouldInitialize } from './utils/urlUtils';
 import './styles.css';
 
@@ -56,7 +56,9 @@ const App: React.FC = () => {
 const init = async () => {
   console.log('[Coursera Copilot] Initializing extension...');
 
-  // Skip initialization for unsupported pages
+  startZenModeCleanup();
+
+  // Keep lecture-only UI features gated to lecture pages.
   if (!shouldInitialize(window.location.href)) {
     console.log(
       '[Coursera Copilot] Skipping initialization for unsupported page'
