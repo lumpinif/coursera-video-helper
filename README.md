@@ -1,206 +1,80 @@
-# A Coursera transcript copy button extension
+# Coursera Video Helper
 
-![image](https://github.com/user-attachments/assets/8fea1d83-b701-4660-b170-4e4ea9508f7c)
-
-<img width="491" alt="image" src="https://github.com/user-attachments/assets/628a344e-495b-4a2f-a4e1-e16ab673cef4" />
-
-## Coursera Copilot Chrome Extension
-
-A Chrome extension that enhances the Coursera learning experience by providing additional functionality, starting with a transcript copy feature.
+A Chrome extension that adds transcript tools to Coursera lectures.
+Version 0.3.0 supports the October 2026 course player with its transcript side panel.
 
 ## Features
 
-### Current
+- **Copy transcript**: Open **Transcript**, then select **Copy transcript** below
+  the language selector. The copy includes the lecture title, all paragraphs,
+  and their timestamps in the selected language.
+- **Play from first caption**: Select the button below the lecture title to play
+  from the first spoken caption. The extension opens the transcript if needed.
+  This preserves the previous **Start from Beginning** behavior, which skips
+  any introduction before the first caption.
+- **Page navigation**: Controls follow the current lecture and transcript panel.
+  Closing a panel or switching to Notes removes the copy button. Opening the
+  transcript again restores it. Reading and assignment pages have no video tools.
+- **Zen cleanup**: The existing rules in `src/content/config/zenMode.ts` remove
+  matching page elements across Coursera. This is a build-time configuration,
+  not a settings toggle.
 
-- Copy Lecture Transcript: Adds a "Copy" button next to the "Discuss" tab in course lectures to easily copy the entire transcript to clipboard
-- Modern UI with Tailwind CSS styling
-- Responsive design that matches Coursera's interface
-- TypeScript for enhanced type safety and developer experience
-- React components for modular UI development
-- Webpack configuration for development and production builds
+The extension reads the transcript already displayed by Coursera. It does not
+send transcript text to another service. Copying requires an available transcript.
 
-## Development Features
+## Install or update
 
-- Husky for Git hooks management
-- ESLint + Prettier for code formatting
-- Markdownlint for markdown file consistency
-- Lint-staged for pre-commit code quality checks
-- Bun as the JavaScript runtime and package manager
-- Jest for testing framework
-
-## Project Structure
-
-```tree
-coursera-extension/
-├── .github/                # GitHub configuration
-├── .husky/                # Git hooks configuration
-├── src/
-│   ├── content/           # Content scripts
-│   ├── types/             # TypeScript type definitions
-│   └── manifest.json      # Extension manifest
-├── public/                # Static assets
-├── dist/                  # Built files
-├── .eslintrc.cjs         # ESLint configuration
-├── .prettierrc           # Prettier configuration
-├── .markdownlint-cli2.jsonc # Markdownlint configuration
-├── tsconfig.json         # TypeScript configuration
-├── webpack.common.js     # Common webpack configuration
-├── webpack.dev.js       # Development webpack configuration
-├── webpack.prod.js      # Production webpack configuration
-├── tailwind.config.js   # Tailwind CSS configuration
-├── postcss.config.cjs   # PostCSS configuration
-└── package.json         # Project dependencies
-```
-
-## Technical Stack
-
-- TypeScript for type safety
-- React for UI components
-- Tailwind CSS for styling
-- Webpack for bundling
-- Bun for package management and running scripts
-- ESLint + Prettier for code formatting
-- Jest for testing
-- Husky + lint-staged for Git hooks
-- PostCSS for CSS processing
-- Markdownlint for markdown linting
-
-## Getting Started
-
-### Prerequisites
-
-- Leave a for this repo
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [Git](https://git-scm.com/)
-- [Bun](https://bun.sh/) (for faster package management)
-- Google Chrome browser
-
-### Development Tools
-
-#### Markdown Linting
-
-The project uses markdownlint for consistent markdown formatting. The rules are configured in `.markdownlint-cli2.jsonc`. To check markdown files locally:
+Requires Bun, Node.js 20 or later, and a Chromium browser.
 
 ```bash
-bun markdownlint-cli2 "**/*.md"
+git clone https://github.com/lumpinif/coursera-video-helper.git
+cd coursera-video-helper
+bun install --frozen-lockfile
+bun run build
 ```
 
-To automatically fix markdown issues:
+1. Open `chrome://extensions` in Chrome.
+2. Enable **Developer mode**.
+3. Select **Load unpacked** and choose this project's `dist` directory.
+4. Open or reload a Coursera lecture.
 
-```bash
-bun markdownlint-cli2-fix "**/*.md"
-```
-
-### Installation Steps
-
-1. Open your terminal and clone the repository:
-
-   ```bash
-   git clone https://github.com/lumpinif/coursera-transcript-copy-button.git
-   cd coursera-transcript-copy-button
-   ```
-
-2. Install Bun (if not already installed):
-
-   ```bash
-   # For macOS and Linux:
-   curl -fsSL https://bun.sh/install | bash
-
-   # For Windows (using PowerShell):
-   powershell -c "irm bun.sh/install.ps1|iex"
-   ```
-
-3. Install project dependencies:
-
-   ```bash
-   bun install
-   ```
-
-4. Build the extension:
-
-   ```bash
-   bun run build
-   ```
-
-### Loading the Extension in Chrome
-
-1. Open Google Chrome
-2. Type `chrome://extensions/` in the address bar and press Enter
-3. Enable "Developer mode" by toggling the switch in the top-right corner
-4. Click "Load unpacked" button in the top-left corner
-5. Navigate to your project's directory and select the `dist` folder
-6. The extension should now appear in your extensions list
-7. Pin the extension by clicking the puzzle piece icon in Chrome's toolbar and clicking the pin icon
-
-### Testing the Extension
-
-1. Go to any Coursera lecture page
-2. You should see a new "Copy" button next to the "Discuss" tab
-3. Click the button to copy the lecture transcript
-
-### Troubleshooting
-
-If the extension doesn't appear:
-
-- Make sure you've built the project (`bun run build`)
-- Check if Developer mode is enabled
-- Try reloading the extension
-- Clear Chrome's cache and restart the browser
+For an existing installation, rebuild, select **Reload** on the extension card,
+and reload the Coursera page. A Git update alone does not update a loaded content
+script. No Chrome Web Store release is implied by a repository update.
 
 ## Development
 
 ```bash
-bun install     # Install dependencies
-bun run dev     # Start development mode with watch
-bun run build   # Build for production
-bun run test    # Run tests
-bun run lint    # Run linting
-bun run format  # Format code with Prettier
+bun run dev        # Rebuild the extension when source files change
+bun run build      # Create the production extension in dist/
+bun run typecheck  # Check TypeScript
+bun test           # Check transcript extraction, playback, and lecture URLs
+bun run lint       # Check source code without changing it
+bun run format     # Format source files
 ```
 
-## Continuous Integration
+The extension uses React 18, TypeScript, and Webpack. All injected styles are
+scoped to the extension controls. The extension does not move Coursera's own
+controls or apply a global CSS reset.
 
-This project uses GitHub Actions for CI with Bun. The CI pipeline:
+## Validation
 
-- Runs on every push to main and pull requests
-- Installs dependencies with Bun
-- Runs build, tests, and linting
-- Ensures code quality and functionality
+The automated tests use synthetic text with the observed transcript markup.
+They cover timestamps, nested phrase markup, empty and hidden transcripts,
+language/content replacement, and lecture-only URL matching. Playback tests cover
+delayed captions, opening the panel, and cancellation after a lesson change.
 
-## Best Practices Implementation
+For changes to the host layout, also check the production bundle on a real
+Coursera page:
 
-- **Performance**:
+1. Copy a complete transcript and check the title, first and last paragraphs,
+   and timestamps. Check keyboard activation and the copy failure/retry state.
+2. Close the transcript and select **Play from first caption**.
+3. Switch between Transcript, Notes, and Files. Reopen Transcript and check that
+   there is one copy button.
+4. Switch lectures, visit a reading, and return through browser history.
+5. Check the side panel in wide and narrow desktop windows and the bottom sheet
+   layout below Coursera's desktop breakpoint.
 
-  - Efficient DOM manipulation
-  - Debounced event handlers
-  - Minimal re-renders
-  - Optimized Tailwind CSS output
-
-- **Code Quality**:
-
-  - TypeScript for type safety
-  - ESLint for code quality
-  - Prettier for consistent formatting
-  - Modular React components
-
-- **Error Handling**:
-
-  - Graceful degradation
-  - User-friendly error messages
-  - Logging for debugging
-
-- **Maintainability**:
-
-  - Modular code structure
-  - Clear documentation
-  - Consistent naming conventions
-  - Component-based architecture
-
-## Browser Support
-
-- Chrome: Latest version
-- Other Chromium-based browsers (Edge, Brave, etc.): Should work but not officially supported
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+A browser script injection validates the bundle's page behavior. It does not
+validate Chrome's unpacked-extension installation or Web Store distribution.

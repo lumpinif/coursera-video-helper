@@ -1,3 +1,54 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Scope every rule to the extension. Global resets change Coursera's player. */
+.cvh-control {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+
+#transcript-copy-button-container {
+  margin-top: 4px;
+}
+
+#auto-seek-button-container {
+  margin-top: 4px;
+}
+
+.cvh-control .cvh-button {
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  max-width: 100%;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: #0056d2;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: start;
+  cursor: pointer;
+}
+
+.cvh-control .cvh-button:hover:not(:disabled) {
+  background: #f2f5fa;
+}
+
+.cvh-control .cvh-button:focus-visible {
+  outline: 2px solid #0056d2;
+  outline-offset: 2px;
+}
+
+.cvh-control .cvh-button:disabled {
+  color: #63676b;
+  cursor: wait;
+}
+
+.cvh-control .cvh-button[data-status='error'] {
+  color: #b3261e;
+}

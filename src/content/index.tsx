@@ -1,167 +1,101 @@
-import type React from 'react';
-import { useEffect, useState } from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot, type Root } from 'react-dom/client';
 import { AutoSeekToTranscript } from './components/AutoSeekToTranscript';
 import { CopyTranscriptButton } from './components/CopyTranscriptButton';
-import { findElement, startZenModeCleanup } from './utils/domUtils';
-import { shouldInitialize } from './utils/urlUtils';
+import { startZenModeCleanup } from './utils/domUtils';
+import { getTranscriptContainer } from './utils/transcript';
+import { isLecturePage } from './utils/urlUtils';
 import './styles.css';
 
-const TABLIST_SELECTORS = [
-  '[role="tablist"][aria-label="Related lecture content tabs"]',
-  'div[role="tablist"]',
-  '[aria-label="Related lecture content tabs"][role="tablist"]',
-];
+type MountedControl = { container: HTMLElement; root: Root };
+let copyControl: MountedControl | undefined;
+let seekControl: MountedControl | undefined;
+let lectureUrl = '';
 
-const App: React.FC = () => {
-  const [isTranscriptSelected, setIsTranscriptSelected] = useState(false);
-
-  useEffect(() => {
-    const checkTranscriptTab = () => {
-      // Try multiple selectors to find the transcript tab
-      const transcriptTab = document.querySelector(
-        '[data-testid="lecture-transcript-tab"], [id*="tab-transcript"], [id^="cds-react-aria"][id$="-tab-transcript"]'
-      );
-
-      if (
-        transcriptTab &&
-        transcriptTab.getAttribute('aria-selected') === 'true'
-      ) {
-        console.log(
-          `[Coursera Copilot] Found active transcript tab: ${transcriptTab.id}`
-        );
-        setIsTranscriptSelected(true);
-      } else {
-        setIsTranscriptSelected(false);
-      }
-    };
-
-    // Initial check
-    checkTranscriptTab();
-
-    // Create observer to watch for changes
-    const observer = new MutationObserver(checkTranscriptTab);
-    observer.observe(document.body, {
-      attributes: true,
-      subtree: true,
-      attributeFilter: ['aria-selected'],
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  return isTranscriptSelected ? <CopyTranscriptButton /> : null;
+const unmount = (control: MountedControl | undefined) => {
+  control?.root.unmount();
+  control?.container.remove();
 };
 
-const init = async () => {
-  console.log('[Coursera Copilot] Initializing extension...');
+const createControl = (id: string): MountedControl => {
+  const container = document.createElement('div');
+  container.id = id;
+  container.className = 'cvh-control';
+  return { container, root: createRoot(container) };
+};
 
-  startZenModeCleanup();
-
-  // Keep lecture-only UI features gated to lecture pages.
-  if (!shouldInitialize(window.location.href)) {
-    console.log(
-      '[Coursera Copilot] Skipping initialization for unsupported page'
-    );
-    return;
+const syncControls = () => {
+  // Coursera replaces panel contents without a document navigation.
+  if (lectureUrl !== location.href) {
+    unmount(copyControl);
+    unmount(seekControl);
+    copyControl = seekControl = undefined;
+    lectureUrl = location.href;
   }
+  if (!isLecturePage(lectureUrl)) return;
 
-  // Initialize copy transcript button
-  const existingButton = document.getElementById('coursera-copilot-button');
-  if (existingButton) {
-    console.log(
-      '[Coursera Copilot] Button already exists, skipping initialization'
-    );
-    return;
-  }
-
-  const tablist = await findElement(TABLIST_SELECTORS);
-
-  if (tablist) {
-    console.log('[Coursera Copilot] Found tablist, injecting button...');
-
-    const container = document.createElement('div');
-    // Add Coursera's classes and make it behave like their tab items
-    container.className = 'contents cds-button-container css-zgpty rounded-md';
-    container.setAttribute('role', 'tab');
-    container.setAttribute('id', 'transcript-copy-button-container');
-    tablist.appendChild(container);
-
-    const root = createRoot(container);
-    root.render(<App />);
-    console.log('[Coursera Copilot] Button injected successfully');
-  } else {
-    console.warn('[Coursera Copilot] Could not find tablist');
-  }
-
-  // Initialize auto seek button
-  const existingSeekButton = document.getElementById(
-    'auto-seek-button-container'
+  const title = document.querySelector(
+    '[data-testid="video-item-title-and-attribution"]'
   );
-  if (existingSeekButton) return;
+  if (seekControl && seekControl.container.parentElement !== title) {
+    unmount(seekControl);
+    seekControl = undefined;
+  }
+  if (title && !seekControl) {
+    seekControl = createControl('auto-seek-button-container');
+    title.appendChild(seekControl.container);
+    seekControl.root.render(<AutoSeekToTranscript />);
+  }
 
-  const titleContainer = await findElement(['#video-item-title-and-save-note']);
-  if (titleContainer) {
-    // Create a new grid item container for our button
-    const seekGridItem = document.createElement('div');
-    seekGridItem.style.display = 'flex';
-    seekGridItem.style.alignItems = 'center';
-    seekGridItem.style.justifyContent = 'flex-end';
-    seekGridItem.style.minWidth = '0';
-
-    // Create our button container
-    const seekButtonContainer = document.createElement('div');
-    seekButtonContainer.id = 'auto-seek-button-container';
-    seekButtonContainer.className = 'rc-CaptureHighlightButton';
-
-    // Add button container to grid item
-    seekGridItem.appendChild(seekButtonContainer);
-
-    // Find title and save note containers
-    const titleAndAttribution = titleContainer.querySelector(
-      'div[data-testid="video-item-title-and-attribution"]'
-    );
-    const saveNoteGridItem = titleAndAttribution?.nextElementSibling;
-
-    if (titleAndAttribution && saveNoteGridItem) {
-      // Create wrapper for buttons
-      const buttonWrapper = document.createElement('div');
-      buttonWrapper.style.display = 'flex';
-      buttonWrapper.style.gap = '8px';
-      buttonWrapper.style.alignItems = 'center';
-      buttonWrapper.style.justifyContent = 'flex-end';
-      buttonWrapper.style.minWidth = '0';
-
-      // Insert our grid item and wrap it with save note button
-      saveNoteGridItem.insertAdjacentElement('beforebegin', seekGridItem);
-      seekGridItem.parentNode?.insertBefore(buttonWrapper, seekGridItem);
-      buttonWrapper.appendChild(seekGridItem);
-      buttonWrapper.appendChild(saveNoteGridItem);
-
-      // Render our button
-      const seekRoot = createRoot(seekButtonContainer);
-      seekRoot.render(<AutoSeekToTranscript />);
-      console.log('[Coursera Copilot] Auto seek button injected successfully');
+  const transcript = getTranscriptContainer();
+  const panel = transcript?.closest(
+    '[data-testid="item-tool-panel-layout-tool-content-panel-content"]'
+  );
+  // Do not move Coursera's controls. Older players use an inline transcript.
+  const heading = panel?.querySelector('h2');
+  const copyHost =
+    heading?.parentElement?.parentElement ?? transcript?.parentElement;
+  if (
+    copyControl &&
+    (!copyControl.container.isConnected ||
+      copyControl.container.parentElement !== copyHost)
+  ) {
+    unmount(copyControl);
+    copyControl = undefined;
+  }
+  if (copyHost && !copyControl) {
+    copyControl = createControl('transcript-copy-button-container');
+    if (heading) {
+      copyHost.appendChild(copyControl.container);
+    } else {
+      copyHost.insertBefore(copyControl.container, transcript ?? null);
     }
+    copyControl.root.render(<CopyTranscriptButton />);
   }
 };
 
-// Initialize when DOM is ready
+const init = () => {
+  startZenModeCleanup();
+  syncControls();
+  let scheduled = false;
+  const observer = new MutationObserver(() => {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      syncControls();
+    });
+  });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['aria-selected', 'aria-pressed', 'aria-hidden', 'hidden'],
+  });
+  window.addEventListener('popstate', syncControls);
+};
+
 if (document.readyState === 'loading') {
-  console.log(
-    '[Coursera Copilot] Document loading, waiting for DOMContentLoaded...'
-  );
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', init, { once: true });
 } else {
   init();
 }
-
-// Re-initialize on URL changes
-let lastUrl = window.location.href;
-new MutationObserver(() => {
-  const url = window.location.href;
-  if (url !== lastUrl) {
-    lastUrl = url;
-    init();
-  }
-}).observe(document, { subtree: true, childList: true });

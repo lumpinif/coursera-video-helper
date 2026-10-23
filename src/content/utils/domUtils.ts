@@ -9,13 +9,13 @@ export const waitForElement = (
   timeout = 5000
 ): Promise<Element | null> => {
   return new Promise(resolve => {
-    if (document.querySelector(selector)) {
-      return resolve(document.querySelector(selector));
-    }
+    const element = document.querySelector(selector);
+    if (element) return resolve(element);
 
     const observer = new MutationObserver(() => {
       if (document.querySelector(selector)) {
         observer.disconnect();
+        clearTimeout(timer);
         resolve(document.querySelector(selector));
       }
     });
@@ -26,28 +26,11 @@ export const waitForElement = (
     });
 
     // Timeout
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       observer.disconnect();
       resolve(null);
     }, timeout);
   });
-};
-
-export const findElement = async (
-  selectors: string[]
-): Promise<Element | null> => {
-  for (const selector of selectors) {
-    const element = await waitForElement(selector);
-    if (element) {
-      console.log('[Coursera Copilot] Found element using the selector');
-      return element;
-    }
-  }
-  console.log(
-    '[Coursera Copilot] No matching element found for selectors:',
-    selectors
-  );
-  return null;
 };
 
 let zenModeObserver: MutationObserver | null = null;
@@ -58,7 +41,8 @@ const normalizeText = (value: string): string =>
 
 const hasZenModeRules = (): boolean =>
   Boolean(
-    ZEN_MODE_ATTRIBUTE_SELECTORS.length > 0 || normalizeText(ZEN_MODE_TEXT_MATCH)
+    ZEN_MODE_ATTRIBUTE_SELECTORS.length > 0 ||
+      normalizeText(ZEN_MODE_TEXT_MATCH)
   );
 
 const formatAttributeSelector = (attributeExpression: string): string => {
@@ -68,15 +52,11 @@ const formatAttributeSelector = (attributeExpression: string): string => {
     return '';
   }
 
-  if (
-    trimmedExpression.startsWith('[') &&
-    trimmedExpression.endsWith(']')
-  ) {
+  if (trimmedExpression.startsWith('[') && trimmedExpression.endsWith(']')) {
     return trimmedExpression;
   }
 
-  const [attributeName, ...attributeValueParts] =
-    trimmedExpression.split('=');
+  const [attributeName, ...attributeValueParts] = trimmedExpression.split('=');
   const normalizedAttributeName = attributeName?.trim();
 
   if (!normalizedAttributeName) {
